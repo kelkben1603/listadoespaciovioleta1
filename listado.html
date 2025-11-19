@@ -1,0 +1,369 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Listado topográfico - AbsNet1 (HTML con búsqueda)</title>
+  <style>
+    body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; margin: 20px; background: #f7fafc; color: #111827; }
+    header { display:flex; gap:12px; align-items:center; margin-bottom:18px; }
+    h1 { font-size:1.25rem; margin:0; }
+    .search-wrap { display:flex; gap:8px; align-items:center; margin-left:auto; }
+    input[type="search"] {
+      width:360px; max-width:60vw;
+      padding:8px 12px; border-radius:8px; border:1px solid #cbd5e1;
+      font-size:0.95rem;
+    }
+    button { padding:8px 10px; border-radius:8px; border:1px solid #cbd5e1; background:white; cursor:pointer; }
+    button:active { transform: translateY(1px); }
+    .meta { font-size:0.85rem; color:#475569; margin-bottom:8px; }
+    #results { white-space:pre-wrap; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", monospace; background:white; border-radius:8px; padding:14px; border:1px solid #e2e8f0; max-height:70vh; overflow:auto; box-shadow: 0 1px 2px rgba(0,0,0,0.03); }
+    .highlight { background: #fffbdd; border-radius:4px; padding:0 2px; }
+    .controls { margin-top:8px; display:flex; gap:8px; align-items:center; }
+    .small { font-size:0.85rem; color:#64748b; }
+    @media (max-width:640px){
+      input[type="search"] { width:180px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div>
+      <h1>Listado topográfico de ejemplares — AbsNet1 (HTML)</h1>
+      <div class="meta">Contenido extraído del PDF original. Fuente: AbsNet1.pdf. :contentReference[oaicite:1]{index=1}</div>
+    </div>
+
+    <div class="search-wrap" role="search" aria-label="Buscar en el listado">
+      <input id="search" type="search" placeholder="Buscar (ej. título, signatura, código...)" aria-label="Barra de búsqueda"/>
+      <button id="clear">Borrar</button>
+      <button id="download">Descargar HTML</button>
+    </div>
+  </header>
+
+  <div class="small">Consejo: escribe y pulsa Enter; Esc limpia la búsqueda. La búsqueda es insensible a mayúsculas.</div>
+
+  <div id="results" aria-live="polite"></div>
+
+  <div class="controls">
+    <div class="small">Total líneas: <span id="totalLines">0</span></div>
+  </div>
+
+<script>
+/* Contenido plano extraído del PDF (conserva saltos de línea).
+   Si quieres, puedes reemplazar este texto por el contenido de otro PDF. */
+const rawText = `Listado topográfico
+
+19/11/2025 Página 1
+
+LISTADO TOPOGRÁFICO DE EJEMPLARES
+
+Signatura Sig. supl. Suc. Loc. Cod. Bar.Nº Reg. Título
+
+028 BOL muj              espacio vi 478 PRE 1007950619       Las mujeres que escriben también son peligrosas /           
+028 BOL muj              espacio vi 478 PRE 1001687410       Las mujeres, que leen, son peligrosas /                     
+1 ZAM sav                espacio vi 478 PRE 1001937358       María Zambrano : la razón poética /                         
+141 ADO sex              espacio vi 478 PRE 1003291938       El sexo invisible : [una nueva mirada a la historia de las m
+141 ARE muj              espacio vi 478 PRE 1009214487       La mujer del porvenir : La mujer de su casa /               
+141 ARR mia              espacio vi 478 PRE 1003307862 7839  Mi amor, mi juez : alteridad autobiográfica femenina /     
+141 BAL bue              espacio vi 478 PRE 1003285584       Bueno chicas, esto se acabó : una guía para desdramatizar la
+141 BEA seg              espacio vi 478 PRE 1009733654       El segundo sexo /                                           
+141 BOL dio              espacio vi 478 PRE 1009733676       Las diosas de cada mujer /                                  
+141 CAM cad              espacio vi 478 PRE 1003295988       La cadera de Eva : El protagonismo de la mujer en la evoluci
+141 ENC enc              espacio vi 478 PRE 1001625584       Enciclopedia internacional de las mujeres /                 
+141 ENC enc              espacio vi 478 PRE 1001638738       Enciclopedia internacional de las mujeres /                 
+141 ENC enc              espacio vi 478 PRE 1001638733       Enciclopedia internacional de las mujeres /                 
+141 ENC enc              espacio vi 478 PRE 1001638735       Enciclopedia internacional de las mujeres /                 
+141 ENC enc              espacio vi 478 PRE 1001638740       Enciclopedia internacional de las mujeres /                 
+141 FOR fem              espacio vi 478 PRE 1009147889       Feminismo terapéutico : psicología empoderada para mujeres q
+141 FRA fem              espacio vi 478 PRE 1010362742       Lo femenino en los cuentos de hadas /                       
+141 FRA muj              espacio vi 478 PRE 1002548593 4357  Música bruja /                                              
+141 HIE mat              espacio vi 478 PRE 1002360379       Maternidad e identidad afroamericanas : The Joys of Motherho
+141 HIS his              espacio vi 478 PRE 1005310020 6752  Historia, antropología y fuentes orales : [revista semestral
+141 HOD bru              espacio vi 478 PRE 1009149372       Brujas, guerreras, diosas las mujeres más poderosas de la mi
+141 JAC egi              espacio vi 478 PRE 1007109952       Las egipcias : una visión sorprendente y fascinadora de la s
+141 LES que              espacio vi 478 PRE 1009733632       Que hable Casandra : cuando las mujeres son las narradoras l
+141 LOR nue              espacio vi 478 PRE 1003302691       Los nuevos hombres nuevos : los miedos de siempre en tiempos
+141 MAR muj              espacio vi 478 PRE 1001192792 8384  Mujer y empleo : una estrategia para la igualdad /          
+141 MIG eti              espacio vi 478 PRE 1010378409       Ética para Celia : contra la doble verdad /                
+141 MOO ant              espacio vi 478 PRE 1003307843 4270  Antropología y feminismo /                                 
+141 MOR muj              espacio vi 478 PRE 1001528673       La mujer desnuda : un estudio del cuerpo femenino /         
+141 MUR fem              espacio vi 478 IJ  1009215921       Feminismo ilustrado : ideas para combatir el machismo /     
+141 NOP nop              espacio vi 478 PRE 1010430936       No publiques mi nombre : testimonios contra la violencia sex
+141 QUE que              espacio vi 478 PRE 1006112497       La querella de las mujeres en Europa e Hispanoamerica /     
+141 QUE que              espacio vi 478 PRE 1006112493       La querella de las mujeres en Europa e Hispanoamerica /     
+141 QUI nos              espacio vi 478 PRE 1006969245       Nosotras que perdimos la paz /                              
+141 ROD muj              espacio vi 478 PRE 1007142542       Mujeres para la historia : la España silenciada del siglo XX
+141 SAN tod              espacio vi 478 PRE 1003285627       ¿Todo por amor? : una experiencia educativa contra la violen
+141 SIM hij              espacio vi 478 PRE 1003425165       Hijas de la igualdad, herederas de injusticias /            
+141 VAL muj              espacio vi 478 PRE 1009231653       Mujeres invisibles para la medicina : desvelando nuestra sal
+141 VAR fem              espacio vi 478 IJ  1009198510       Feminismo para principiantes /                              
+141 VAR iba              espacio vi 478 PRE 1003405690       Íbamos a ser reinas : mentiras y complicidades que sustentan
+141 VIL jul              espacio vi 478 PRE 1007372470       Julia, el otro lado de la puerta /                          
+141 VIO vio              espacio vi 478 PRE 1003285466       Violencia doméstica y coeducación : un enfoque multidiscipli
+141 WOL vin              espacio vi 478 PRE 1009214511       Vindicación de los Derechos de la Mujer /                   
+141 ZAM esp              espacio vi 478 PRE 1007134458       Espejo de brujas: Mujeres trangresoras a travé de la histori
+141 ZUM vue              espacio vi 478 PRE 1009777462       La vuelta al mundo en 15 mujeres /                          
+159 EST muj              espacio vi 478 PRE 1009630007       Mujeres que corren con los lobos /                          
+159 HES mie              espacio vi 478 PRE 1010297936       El miedo /                                                  
+159 MAR sind             espacio vi 478 PRE 1010378499       El síndrome de la chica buena : deja de complacer a todo el 
+159 NOR muj              espacio vi 478 PRE 1009762273       Las mujeres que aman demasiado /                            
+24 WET muj               espacio vi 478 PRE 1002971238 7838  Mujer y budismo en occidente : un camino de libertad /      
+27 TOR cua               espacio vi 478 PRE 1003309076 6931  Cuando las mujeres eran sacerdotes : el liderazgo de las muj
+305 BAL cru              espacio vi 478 PRE 1010251253       Cruzando fronteras : Mujeres en la Univesidad de Granada 190
+305 BUR com              espacio vi 478 PRE 1010401126       Cómo ser mujer del Renacimiento : mujeres, poder y el nacimi
+305 BUR muj              espacio vi 478 PRE 1009214478       La mujer moderna y sus derechos /                           
+305 CAN muj              espacio vi 478 PRE 1003329027 7063  La mujer en la antigüedad clásica : unidad didáctica de cult
+305 CHR ciu              espacio vi 478 PRE 1009214494       La ciudad de las damas /                                    
+305 CUM cum              espacio vi 478 PRE 1009476399 Mujer y ciudad : anales de la III Cumbre Iberoamericana de A
+
+19/11/2025 Página 2
+
+LISTADO TOPOGRÁFICO DE EJEMPLARES
+
+Signatura Sig. supl. Suc. Loc. Cod. Bar.Nº Reg. Título
+
+305 DIL muj              espacio vi 478 PRE 1003308653 6169  La mujer en la Reconquista /                                
+305 ELH sie              espacio vi 478 PRE 1009761105       Siempre han hablado por nosotras : feminismo e identidad : u
+305 FER rev              espacio vi 478 PRE 1010042676       La revolución de las invisibles : mujeres en la historia de 
+305 FUE muj              espacio vi 478 PRE 1003308776 6797  Las mujeres en la Antigüedad y la Edad Media /              
+305 HES mal              espacio vi 478 PRE 1009777523       Malas mujeres /                                             
+305 LAB muj              espacio vi 478 PRE 1003308861       La mujer en la edad media /                                 
+305 MAR eso              espacio vi 478 PRE 1010406855       Eso no es amor /                                            
+305 MAR vid              espacio vi 478 PRE 1001630342       Vidas de mujeres andalusíes /                               
+305 MOS muj              espacio vi 478 PRE 1003308836 6167  La mujer en la Grecia clásica                               
+305 MUJ muj              espacio vi 478 PRE 1008295761       La mujer judía /                                            
+305 NAV car              espacio vi 478 PRE 1007134437       Carmela ya no vive aquí :el viaje sin retorno de las mujeres
+305 NAV his              espacio vi 478 PRE 1009777444       Una historia compartida : con ellos, sin ellos, por ellos, f
+305 PAN fem              espacio vi 478 PRE 1009215884       Feminismos y LGTB+ : ¡imparables! /                         
+305 PAT hom              espacio vi 478 PRE 1010339624       El hombre prehistórico es también una mujer : una historia d
+305 PEÑ est              espacio vi 478 PRE 1009364554       De la estirpe de las amazonas /                             
+305 SAN pre              espacio vi 478 PRE 1010339522       Prehistorias de mujeres: descubre lo que no te han contado s
+305 VEG muj              espacio vi 478 PRE 1003308813 4721  La mujer en la historia /                                   
+316 MEM mem              espacio vi 478 PRE 1010446076       Memoria histórica (mujeres) /                               
+343 ALM hue              espacio vi 478 PRE 1001660737       Las huellas de la violencia invisible /                     
+343 ECH man              espacio vi 478 PRE 1003793247       Manual de violencia familiar /                              
+343 MAR via              espacio vi 478 PRE 1006168473       El viaje de Laia : guía de sensibilización sobre la trata de
+343 PER mim              espacio vi 478 PRE 1006114060       Mi marido, mi asesino : Cincuenta casos reales /            
+37 COL edu               espacio vi 478 PRE 1009822131       Educar sin genero : una guia para romper con los estereotipo
+37 LOP apr               Espacio vi 478 PRE 1009836510       Aprender con referentes femeninos : un legado cultural para 
+37 MAR del               espacio vi 478 PRE 1009194982       Del cielo al infierno : en un post /                        
+37 MAR son               espacio vi 478 PRE 1009194976       Sonríe aunque te cueste /                                   
+37 MER inf               espacio vi 478 PRE 1009777454       #Infancias libres : talleres y actividades para educación en
+398 ARR pre              espacio vi 478 PRE 1002545323 6092  Presencia de la mujer en el cante flamenco : ensayo /       
+398 CAB ide              espacio vi 478 PRE 1003188739       La identidad de la mujer en el arte flamenco : estética musi
+398 CHU muj              espacio vi 478 PRE 1003296024       Mujer y flamenco /                                          
+55 CAL geo               espacio vi 478 PRE 1010497843       Geólogas : historia de las pioneras de las Ciencias de la Ti
+612 SAL reg              espacio vi 478 PRE 1009822159       La regla mola : si sabes cómo funciona /                    
+613 HES pla              espacio vi 478 IJ  1009198498       El placer /                                                
+796 BOR nol              espacio vi 478 PRE 1009330251       No las llames chicas, llámalas futbolistas : del maltrato al
+82 LIT muj               espacio vi 478 PRE 1008316789       Litoral femenino : literatura escrita por mujeres en la Espa
+82 MAR des               espacio vi 478 PRE 1003308536 5888  Desde la ventana : enfoque femenino de la literatura español
+902 FLE eni              espacio vi 478 PRE 1003593636       El enigma de Nefertiti                                      
+929 ALC fei              espacio vi 478 PRE 1001560931       Louisa May Alcott : dulce revolucionaria /                  
+929 AUS san              espacio vi 478 PRE 1001560388       Jane Austen /                                               
+929 BAL sin              espacio vi 478 PRE 1009530469       Las sinsombrero : sin ellas, la historia no está completa / 
+929 BRA seg              espacio vi 478 PRE 1001560922       Eva Braun /                                                 
+929 BRO alb              espacio vi 478 PRE 1001560365       Charlotte Brontë                                            
+929 BUR col              espacio vi 478 PRE 1008296367       Carmen de Burgos, Colombine, periodista universal /         
+929 BUR col              espacio vi 478 PRE 1008296365       Carmen de Burgos, Colombine, periodista universal /         
+929 BUR ped              espacio vi 478 PRE 1010251718       Vocación de Libertad : vida de Carmen de Burgos /           
+929 CAL bur              espacio vi 478 PRE 1001560373       María Callas : diva triste /                                
+929 CAS olv              espacio vi 478 PRE 1001660731       Las olvidadas : una historia de mujeres creadoras /         
+929 CLE sau              espacio vi 478 PRE 1001560525       Cleopatra : Cleopatra VII último faraón de Egipto /         
+929 COR plu              espacio vi 478 PRE 1004361279 7843  Plumas femeninas en la literatura de Granada : (siglos VIII-
+929 CRA ama              espacio vi 478 PRE 1003405540       Amantes y reinas : el poder de las mujeres /                
+929 CUE esc              espacio vi 478 PRE 1009777449       Escritoras : una historia de amistad y creación / Carmen G. 
+929 CUR leo              espacio vi 478 PRE 1001560637       Marie Curie /                                               
+929 DIA san              espacio vi 478 PRE 1001560674       Diana princesa de Gales                                     
+929 DUN rod              espacio vi 478 PRE 1001560379       Isadora Duncan /                                            
+929 ELI cas              espacio vi 478 PRE 1002059350 6517  Elisabeth, emperatriz de Austria-Hungría o el hada maldita /
+929 EVA sen              espacio vi 478 PRE 1001561079       Eva /                                                       
+
+19/11/2025 Página 3
+
+LISTADO TOPOGRÁFICO DE EJEMPLARES
+
+Signatura Sig. supl. Suc. Loc. Cod. Bar.Nº Reg. Título
+
+929 FIS his              espacio vi 478 PRE 1002714642 35    Historias de las reinas de España : la Casa de Austria /    
+929 FLE eni              espacio vi 478 PRE 1001536888       El enigma de Nefertiti                                      
+929 FRA tab              espacio vi 478 PRE 1001560908       Ana Frank                                                   
+929 GAN jon              espacio vi 478 PRE 1001560687       Indira Gandhi /                                             
+929 GAR señ              espacio vi 478 PRE 1006120378       La señora de El Pardo /                                     
+929 GLE muj              espacio vi 478 PRE 1007157749       Mujeres filósofas en la historia : desde la antigüedad hasta
+929 GOL oli              espacio vi 478 PRE 1001560872       Golda Meir: madre y reina de Israel                         
+929 GUI gui              espacio vi 478 PRE 1004373571 6452  Guía de artistas y escritoras contempóraneas andaluzas /    
+929 HUE muj              espacio vi 478 PRE 1008162878       Mujeres de la cultura /                                     
+929 ISA dia              espacio vi 478 PRE 1001560394       Isabel la Católica /                                        
+929 ISA fer              espacio vi 478 PRE 1004653056       Isabel la Católica /                                        
+929 ISA pol              espacio vi 478 PRE 1009579419       La reina : la increíble vida de Isabel II /                
+929 ISA sar              espacio vi 478 PRE 1001560467       Isabel I, reina de Inglaterra : la reina virgen /           
+929 JOS and              espacio vi 478 PRE 1001560439       Josefina /                                                  
+929 JUA bur              espacio vi 478 PRE 1001560627       Juana de Arco : la doncella de hierro /                     
+929 JUA can              espacio vi 478 PRE 1001560489       Juana la Loca : reina de España /                           
+929 JUA fer              espacio vi 478 PRE 1003067571 7481  Juana la Loca : la cautiva de Tordesillas /                
+929 KEN per              espacio vi 478 PRE 1001560821       Jacqueline Bouvier Kennedy Onassis: el icono de las mil cara
+929 LIS cab              espacio vi 478 PRE 1009214501       Caballero Jack : Los diarios de Anne Lister /               
+929 MAR fer              espacio vi 478 PRE 1001560853       María Magdalena /                                           
+929 MAR muñ              espacio vi 478 PRE 1001560398       María Antonieta = Marie Antoinette /                        
+929 MAR vel              espacio vi 478 PRE 1001560937       María, madre de Jesús /                                     
+929 MAT bur              espacio vi 478 PRE 1001560842       Los cien mundos de Mata-Hari /                              
+929 MEN fru              espacio vi 478 PRE 1001560412 6517  Rigoberta Menchú                                            
+929 MEN mel              espacio vi 478 PRE 1003067816 4715  Me llamo Rigoberta Menchú y así me nació la conciencia /    
+929 MOL ped              espacio vi 478 PRE 1010122568       La cuidadora de palabras: : vida de María Moliner /         
+929 MON arn              espacio vi 478 PRE 1003325793 2295  Marilyn Monroe : Un homenaje de Eve Arnold /               
+929 MON cue              espacio vi 478 PRE 1001560429       Marilyn Monroe : 92-60-90 /                                 
+929 MON dic              espacio vi 478 PRE 1007573305       Dictadoras : las mujeres de los hombres más despiadados de l
+929 MOR via              espacio vi 478 PRE 1007138349       Viajeras intrépidas y aventureras /                         
+929 MUJ muj              espacio vi 478 TAN 1009613710       Mujeres gitanas en la Guerra Civil y Posguerra : voces de la
+929 MUÑ sab              espacio vi 478 PRE 1009330347       Sabias : la cara oculta de la ciencia /                     
+929 NEF arm              espacio vi 478 PRE 1001560406       Nefertiti : señora de las dos tierras : ámbito político, soc
+929 NIÑ boh              espacio vi 478 PRE 1004359311 7571  La Niña de los Peines en la Casa de los Pavón : vida y obra 
+929 OÑO que              espacio vi 478 PRE 1010522569       Las que faltaban : una historia del mundo diferente /       
+929 PAB muj              espacio vi 478 PRE 1003189367       Mujeres guitarristas /                                      
+929 PER gar              espacio vi 478 PRE 1003325032 8337  Greta Garbo                                                
+929 PER per              espacio vi 478 PRE 1003324933 8338  Eva Perón /                                                
+929 PRO vid              espacio vi 478 PRE 1001656936       Vidas de las musas : las fascinantes historias de las mujere
+929 REI urb              espacio vi 478 PRE 1003067635 7467  La Reina /                                                  
+929 ROD muj              espacio vi 478 PRE 1009613703       Mujeres gitanas represaliadas en la provincia de Granada dur
+929 ROD muj              espacio vi 478 PRE 1002247349 8499  Mujeres en la medicina /                                    
+929 ROD muj              espacio vi 478 PRE 1007134453       Mujeres olvidadas : las grandes silenciadas de la Segunda Re
+929 SAN oli              espacio vi 478 PRE 1001560419       Santa Rosa de Lima : Rosa de Lima, Rosa de América /        
+929 SIS per              espacio vi 478 PRE 1001560452       Sissi Emperatriz, Elizabeth de Austria : el hada de la soled
+929 SKL her              espacio vi 478 PRE 1007434522       Marie Sklodowska Curie /                                    
+929 SUA dia              espacio vi 478 PRE 1007442780       Diagnóstico, cáncer : mi lucha por la vida /                
+929 TER cam              espacio vi 478 PRE 1001561067       Santa Teresa de Jesús /                                     
+929 TER cri              espacio vi 478 PRE 1005010830       Vida de Santa Teresa /                                      
+929 TER flo              espacio vi 478 PRE 1001560800       Teresa de Calcuta : una madre para todos /                  
+929 TER gra              espacio vi 478 PRE 1003314741 4296  La madre Teresa de Calcuta : la monja cuya "misión de amor" 
+929 TER lib              espacio vi 478 PRE 1009214505       Libro de la vida /                                          
+929 TUR tur              espacio vi 478 PRE 1003325226 6247  Yo, Tina : la historia de mi vida /                         
+929 TUS pas              espacio vi 478 PRE 1007159651       La pasión de ser mujer /                                    
+929 WOL rub              espacio vi 478 PRE 1001560619       Virginia Woolf /                                            
+929 YOM yom              espacio vi 478 TAN 1010388726       Yo Mariana : Centro Cultural Gran Capitán, del 24 de mayo al
+
+19/11/2025 Página 4
+
+LISTADO TOPOGRÁFICO DE EJEMPLARES
+
+Signatura Sig. supl. Suc. Loc. Cod. Bar.Nº Reg. Título
+
+COM GON mol              Espacio vi 478 CO  1010100365       Molly Wind: bibliotecarias a caballo /                      
+J-17 ACE enc             espacio vi 478 IJ  1009215927       Encantadas /                                                
+J-17 ARR chi             espacio vi 478 IJ  1009330508       ¡Las chicas jugamos a todo! /                               
+J-17 BELL mus            espacio vi 478 IJ  1009593905       Las músicas de Indonesia /                                  
+J-17 BELL sir            espacio vi 478 IJ  1009593908       Las sirenas de Jamaica /                                    
+J-17 ETX cue             espacio vi 478 IJ  1009641127       Cuentos clásicos para chicas modernas /                     
+J-17 PAN cue             espacio vi 478 IJ  1009836026       Un cuento propio : historias para escuchar y leer, heroínas 
+J-292 BEC cue            espacio vi 478 IJ  1010251709       Cuenta con Katherine : [cómo Katherine Johnson salvó el Apol
+J-929 COM KOB            espacio vi 478 CO  1009198480       Género Queer : una autobiografía /                          
+J-T ROM ast              Espacio vi 478 IJ  1009473897       Astrolabio /                                                
+MUJ 82-3 PAC             espacio vi 478 IRO 1009197723       Muchachas 1 /                                               
+MUJ 82-3 PAN             espacio vi 478 PRE 1010190741       Muchachas 3 /                                               
+MUJ 821-1 FUE            espacio vi 478 PRE 1002018057 8155  Garra de la guerra /                                       
+MUJ 821-1 JUA            espacio vi 478 PRE 1009702334       Enigmas de la casa del placer /                             
+N ALD his                espacio vi 478 PRE 1008808804       Historia de una maestra /                                   
+N AUS "17"               espacio vi 478 DEP 1002011808 124   Orgullo y prejuicio /                                       
+N MAT pue                espacio vi 478 PRE 1004067169       La puerta de la luna : cuentos completos /                  
+N MUL sin                espacio vi 478 PRE 1008056546       Sinfonía en rojo : prosa y poesía selecta /                 
+N SHE "19"               espacio vi 478 PRE 1007691489       Frankenstein /                                              
+N WHA "18"               espacio vi 478 PRE 1002587488       Ethan Frome                                                
+N WHA cas                espacio vi 478 PRE 1002556499       La casa de la alegria / Edith Wharton ; [traducción, Pilar G
+N ZIT paj                espacio vi 478 PRE 1009214123       Pájaro rojo habla /                                         
+P FIG gri                espacio vi 478 PRE 1009214343       El grito inútil /                                           
+
+Total ejemplares: 191`;
+
+/* Render and search logic */
+const resultsNode = document.getElementById('results');
+const searchInput = document.getElementById('search');
+const clearBtn = document.getElementById('clear');
+const totalLinesSpan = document.getElementById('totalLines');
+
+let lines = rawText.split('\\n');
+function render(linesToShow, q) {
+  // If q provided, highlight matches
+  if (!q) {
+    resultsNode.textContent = linesToShow.join('\\n');
+  } else {
+    // escape q for RegExp
+    try {
+      const re = new RegExp(q.replace(/[.*+?^${}()|[\\]\\\\]/g, '\\\\$&'), 'ig');
+      // Build HTML with highlighted matches
+      const html = linesToShow.map(line => {
+        if (re.test(line)) {
+          // Replace all matches with <span class="highlight">...</span>
+          return line.replace(re, match => `<span class="highlight">${match}</span>`);
+        } else {
+          return line;
+        }
+      }).join('<br>');
+      resultsNode.innerHTML = html;
+    } catch (err) {
+      // On invalid regex, fallback to simple includes (shouldn't happen)
+      const qlow = q.toLowerCase();
+      const html = linesToShow.map(line => {
+        const idx = line.toLowerCase().indexOf(qlow);
+        if (idx >= 0) {
+          const before = line.slice(0, idx);
+          const match = line.slice(idx, idx + qlow.length);
+          const after = line.slice(idx + qlow.length);
+          return before + '<span class="highlight">' + match + '</span>' + after;
+        } else return line;
+      }).join('<br>');
+      resultsNode.innerHTML = html;
+    }
+  }
+  totalLinesSpan.textContent = linesToShow.length;
+}
+
+// initial render (all)
+render(lines, '');
+
+// filter function: returns lines that contain q (case-insensitive) OR, if q empty, all lines
+function filterAndRender(q) {
+  if (!q) {
+    render(lines, '');
+    return;
+  }
+  const qlow = q.toLowerCase();
+  const filtered = lines.filter(l => l.toLowerCase().includes(qlow));
+  render(filtered, q);
+}
+
+// events
+searchInput.addEventListener('input', (e) => {
+  const q = e.target.value.trim();
+  filterAndRender(q);
+});
+searchInput.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    searchInput.value = '';
+    filterAndRender('');
+  }
+});
+clearBtn.addEventListener('click', () => {
+  searchInput.value = '';
+  searchInput.focus();
+  filterAndRender('');
+});
+
+// download the HTML file (current page) - creates a blob of the current full HTML
+document.getElementById('download').addEventListener('click', () => {
+  const doc = '<!doctype html>\\n' + document.documentElement.outerHTML;
+  const blob = new Blob([doc], {type: 'text/html;charset=utf-8'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'absnet1_con_busqueda.html';
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+});
+
+// Accessibility: focus search input on load
+window.addEventListener('load', () => searchInput.focus());
+</script>
+</body>
+</html>
